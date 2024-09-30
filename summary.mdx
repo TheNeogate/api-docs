@@ -1,0 +1,303 @@
+---
+title: 'Integration rapide'
+description: 'Start integrating our API in under 5 minutes'
+---
+
+#
+
+This page contains an overview of the API, authentication details, and all available endpoints, with examples of requests and responses.
+
+## 1. Overview
+
+Our API is designed following REST principles, using resource-centric URLs and returning information in JSON format. The API applies standard HTTP rules for response codes, authentication, and verbs.
+
+- **Base URL**: `{{baseUrl}}`
+- **Content Type**: `application/json`
+- **Authentication**: API Key via `Authorization` header
+
+## 2. Authentication
+
+The API uses API keys for authentication.
+
+- **Live mode secret key**: Server-side calls in live mode.
+
+### Example Request
+
+```bash
+curl -X GET "{{baseUrl}}/v1/health/operators" \
+-H "Authorization: Basic {{Token}}"
+```
+
+## 3. Payment Methods
+
+Fetch the list of payment methods supported by the API.
+
+- **Endpoint**: `GET /v1/health/operators`
+- **Authorization**: API Key
+
+### Request
+
+```bash
+curl --request GET \
+  --url '{{baseUrl}}/v1/health/operators/collect' \
+  --header 'Authorization: Basic {{Token}}'
+```
+
+### Example Response
+
+```json
+{
+  "code": 200,
+  "message": "OK",
+  "data": {
+    "CI": ["MOOV_CI", "ORANGE_CI", "MTN_CI","WAVE_CI"],
+  }
+}
+```
+
+## 4. Collection
+
+### 4.1. Collection Initialization
+
+Initialize a collect with the API.
+
+- **Endpoint**: `POST /v1/collect/start`
+- **Authorization**: Bearer Token
+
+#### Request
+
+```bash
+curl --request POST \
+  --url '{{baseUrl}}/v1/collect/start' \
+  --header 'Authorization: Bearer {{Token}}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "order_id": "{{$guid}}",
+    "amount": 200,
+    "currency": "XOF",
+    "phone_number": "+2250701020304",
+    "operator": "ORANGE_CI"
+  }'
+```
+
+#### Example Response
+
+```json
+{
+  "code": 201,
+  "message": "CREATED",
+  "data": {
+    "token": "be45970d-3888-4272-acc4-d52561da3758",
+    "status": "new"
+  }
+}
+```
+
+### 4.2. Collection Process
+
+After creating a collect, you must send it to process
+
+- **Endpoint**: `POST /v1/collect/process`
+- **Authorization**: Bearer Token
+
+#### Request
+
+```bash
+curl --request POST \
+  --url '{{baseUrl}}/v1/collect/process' \
+  --header 'Authorization: Bearer {{Token}}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "token": "{{$guid}}",
+    "otp_code": "1234",
+    "phone_number": "+2250701020304",
+    "operator": "ORANGE_CI"
+  }'
+```
+
+#### Example Response
+
+```json
+{
+  "code": 200,
+  "message": "OK",
+  "data": {
+    "token": "be45970d-3888-4272-acc4-d52561da3758",
+    "status": "pending",
+    "message":"transaction pending"
+  }
+}
+```
+
+### 4.3. Collection Check Status
+
+This guide helps you to understand how to retrieve collect transaction details that were previously processed by API.
+
+- **Endpoint**: `POST /v1/collect/:token`
+- **Authorization**: Bearer Token
+
+#### Request
+
+```bash
+curl --request POST \
+  --url '{{baseUrl}}/v1/collect/:token' \
+  --header 'Authorization: Bearer {{Token}}' \
+  --header 'Content-Type: application/json'
+```
+
+#### Example Response
+
+```json
+{
+  "code": 200,
+  "message": "OK",
+  "data": {
+    "token": "be45970d-3888-4272-acc4-d52561da3758",
+    "status": "success",
+    "message":"transaction success"
+  }
+}
+```
+
+## 5. Payout Services
+
+### 5.1. Availability
+
+List available payout methods.
+
+- **Endpoint**: `GET /v1/health/operators/transfer`
+- **Authorization**: API Key
+
+#### Request
+
+```bash
+curl --request GET \
+  --url '{{baseUrl}}/v1/health/operators/transfer' \
+  --header 'Authorization: Basic {{Token}}'
+```
+
+#### Example Response
+
+```json
+{
+  "code": 200,
+  "message": "OK",
+  "data": {
+    "CI": ["MOOV_CI", "ORANGE_CI", "MTN_CI","WAVE_CI"],
+  }
+}
+```
+
+### 5.2. Transfer Creation
+
+- **Endpoint**: `POST /v1/transfer/create`
+- **Authorization**: Bearer Token
+
+#### Request
+
+```bash
+curl --request POST \
+  --url '{{baseUrl}}/v1/transfer/create' \
+  --header 'Authorization: Bearer {{Token}}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "order_id": "{{$guid}}",
+    "amount": 200,
+    "currency": "XOF",
+    "phone_number": "+2250701020304",
+    "operator": "ORANGE_CI"
+  }'
+```
+
+#### Example Response
+
+```json
+{
+  "code": 201,
+  "message": "CREATED",
+  "data": {
+    "token": "be45970d-3888-4272-acc4-d52561da3757",
+    "status": "new"
+  }
+}
+```
+
+### 5.3. Transfer Submit (Send)
+
+- **Endpoint**: `POST /v1/transfer/send`
+- **Authorization**: Bearer Token
+
+#### Request
+
+```bash
+curl --request POST \
+  --url '{{baseUrl}}/v1/transfer/send' \
+  --header 'Authorization: Bearer {{Token}}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "token": "{{$guid}}"
+  }'
+```
+
+#### Example Response
+
+```json
+{
+  "code": 200,
+  "message": "OK",
+  "data": {
+    "token": "be45970d-3888-4272-acc4-d52561da3757",
+    "status": "pending"
+  }
+}
+```
+
+### 4.3. Transfer Check Status
+
+- **Endpoint**: `GET /v1/transfer/:token`
+- **Authorization**: Bearer Token
+
+#### Request
+
+```bash
+curl --request GET \
+  --url '{{baseUrl}}/v1/transfer/:token' \
+  --header 'Authorization: Bearer {{Token}}' \
+  --header 'Content-Type: application/json'
+```
+
+#### Example Response
+
+```json
+{
+  "code": 200,
+  "message": "OK",
+  "data": {
+    "token": "be45970d-3888-4272-acc4-d52561da3758",
+    "status": "success",
+    "message":"transaction success"
+  }
+}
+```
+
+## 6. Webhooks
+
+Webhook integration for transaction status updates.
+
+### Steps to Set Up Webhooks
+
+1. Create a public HTTPS URL to receive webhook notifications.
+2. Register the URL on the API dashboard.
+3. Handle incoming POST requests.
+
+### Example Webhook Response
+
+```json
+{
+  "event": "payment.success",
+  "data": {
+    "token": "be45970d-3888-4272-acc4-d52561da3758",
+    "status": "success"
+  }
+}
+```
