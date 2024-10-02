@@ -50,7 +50,7 @@
       "group": "Transfer Endpoint",
       "pages": [
         "api-reference/endpoint/create-transfer",
-        "api-reference/endpoint/send-transfer",
+        "api-reference/endpoint/process-transfer",
         "api-reference/endpoint/get-transfer-status"
       ]
     }
