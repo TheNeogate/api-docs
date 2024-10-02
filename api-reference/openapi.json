@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://payin_api_merchant.test",
+      "url": "https://api.neogate.org",
       "description": "Base URL for API requests"
     }
   ],
@@ -95,7 +95,7 @@
     },
     "/v1/collect/create": {
       "post": {
-        "summary": "create a collect",
+        "summary": "Create a collect",
         "description": "Initialize a collection with the API.",
         "operationId": "startCollection",
         "parameters": [
@@ -117,19 +117,32 @@
                 "type": "object",
                 "properties": {
                   "order_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "1931766d-5a85-4a8f-a4af-700451ca0773"
                   },
                   "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 200
                   },
                   "currency": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "XOF"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "example": "Payment description"
                   },
                   "phone_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "+2250701020304"
                   },
-                  "operator": {
-                    "type": "string"
+                  "webhook_url": {
+                    "type": "string",
+                    "example": "https://example.com/notify-url"
+                  },
+                  "custom_field": {
+                    "type": "string",
+                    "example": "any_string"
                   }
                 }
               }
@@ -145,21 +158,102 @@
                   "type": "object",
                   "properties": {
                     "code": {
-                      "type": "integer"
+                      "type": "integer",
+                      "example": 201
                     },
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "CREATED"
                     },
                     "data": {
                       "type": "object",
                       "properties": {
                         "token": {
-                          "type": "string"
+                          "type": "string",
+                          "example": "ffe2dec3-ce25-4bb6-874f-785df41f09df"
                         },
                         "status": {
-                          "type": "string"
+                          "type": "string",
+                          "example": "new"
+                        },
+                        "amount": {
+                          "type": "integer",
+                          "example": 200
+                        },
+                        "currency": {
+                          "type": "string",
+                          "example": "XOF"
+                        },
+                        "operator": {
+                          "type": "string",
+                          "example": "ORANGE_CI"
+                        },
+                        "country": {
+                          "type": "string",
+                          "example": "CI"
+                        },
+                        "country_prefix": {
+                          "type": "string",
+                          "example": "+225"
+                        },
+                        "meta": {
+                          "type": "object",
+                          "properties": {
+                            "otp": {
+                              "type": "object",
+                              "properties": {
+                                "required": {
+                                  "type": "boolean",
+                                  "example": true
+                                },
+                                "length": {
+                                  "type": "integer",
+                                  "example": 4
+                                }
+                              }
+                            },
+                            "payment_url": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "notes_before": {
+                              "type": "string",
+                              "example": "Instruction"
+                            },
+                            "notes_after": {
+                              "type": "string",
+                              "example": "Instruction"
+                            }
+                          }
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 422
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Unprocessable Entity"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Les paramètres envoyés sont invalides"
+                    },
+                    "data": {
+                      "type": "object"
                     }
                   }
                 }
@@ -330,19 +424,32 @@
                 "type": "object",
                 "properties": {
                   "order_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "fd60367d-41b7-4274-a4b1-f715f631573e"
                   },
                   "amount": {
-                    "type": "integer"
-                  },
-                  "currency": {
-                    "type": "string"
-                  },
-                  "phone_number": {
-                    "type": "string"
+                    "type": "integer",
+                    "example": 250
                   },
                   "operator": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "ORANGE_CI"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "example": "XOF"
+                  },
+                  "phone_number": {
+                    "type": "string",
+                    "example": "+2250701020304"
+                  },
+                  "webhook_url": {
+                    "type": "string",
+                    "example": "https://example.com/notify-url"
+                  },
+                  "custom_field": {
+                    "type": "string",
+                    "example": "any_string"
                   }
                 }
               }
@@ -358,21 +465,90 @@
                   "type": "object",
                   "properties": {
                     "code": {
-                      "type": "integer"
+                      "type": "integer",
+                      "example": 201
                     },
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "CREATED"
                     },
                     "data": {
                       "type": "object",
                       "properties": {
                         "token": {
-                          "type": "string"
+                          "type": "string",
+                          "example": "c5828a46-665e-48fd-a287-43c508599bfd"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-10-02T18:22:20.000000Z"
+                        },
+                        "done_at": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": null
+                        },
+                        "order_id": {
+                          "type": "string",
+                          "example": "fd60367d-41b7-4274-a4b1-f715f631573e"
+                        },
+                        "country": {
+                          "type": "string",
+                          "example": "CI"
+                        },
+                        "amount": {
+                          "type": "integer",
+                          "example": 250
+                        },
+                        "currency": {
+                          "type": "string",
+                          "example": "XOF"
+                        },
+                        "phone_number": {
+                          "type": "string",
+                          "example": "+2250701020304"
+                        },
+                        "webhook_url": {
+                          "type": "string",
+                          "example": "https://example.com/notify-url"
+                        },
+                        "custom_field": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": null
                         },
                         "status": {
-                          "type": "string"
+                          "type": "string",
+                          "example": "new"
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 422
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Unprocessable Entity"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Solde insuffisant."
+                    },
+                    "data": {
+                      "type": "object"
                     }
                   }
                 }
